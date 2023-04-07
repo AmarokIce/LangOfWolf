@@ -1,6 +1,7 @@
 package wolf.someoneice.wolflang
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.io.FileInputStream
@@ -9,7 +10,7 @@ import java.io.IOException
 import kotlin.math.floor
 
 object WolfMain {
-    private val gson: Gson = Gson()
+    private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
     @Throws(NotWolfFileException::class, IOException::class)
     fun wolfDecode(file: File) {
         val type = file.name.substring(file.name.indexOf("."))
