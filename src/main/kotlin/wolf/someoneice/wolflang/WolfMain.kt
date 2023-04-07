@@ -11,13 +11,6 @@ import kotlin.math.floor
 object WolfMain {
     private val gson: Gson = Gson()
     @Throws(NotWolfFileException::class, IOException::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val file = File("C:\\Users\\snowl\\Desktop\\voodoo\\Test.wolf")
-        wolfDecode(file)
-    }
-
-    @Throws(NotWolfFileException::class, IOException::class)
     fun wolfDecode(file: File) {
         val type = file.name.substring(file.name.indexOf("."))
         if (type != ".wolf") throw NotWolfFileException()
@@ -47,6 +40,10 @@ object WolfMain {
         val line = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size
         text = addCode(encode(text, line), type)
         val output = FileOutputStream(file.canonicalFile.toString().replace(file.name, file.name.replace(type, ".wolf")))
+        if (type == ".json") {
+            if (text[0] == '[') text = gson.fromJson(text, object : TypeToken<List<*>>() {}.type)
+            if (text[0] == '{') text = gson.fromJson(text, object : TypeToken<Map<*, *>>() {}.type)
+        }
         output.write(text.toByteArray())
         output.close()
     }
@@ -146,10 +143,6 @@ object WolfMain {
     private fun getCharByIndex(i: Int): Char {
         return box[i - 1]
     }
-}
-
-fun main(args: Array<String>) {
-
 }
 
 data class info(
